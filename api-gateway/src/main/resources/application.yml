@@ -1,0 +1,24 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+       defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+  healthcheck:
+    enabled: true
+logbook:
+  write:
+    level: info
+  format:
+    style: curl
+##lease-renewal-interval-in-seconds  心跳
+###lease-expiration-duration-in-seconds 续约时间，超过去除
+##EurekaHealthCheckHandlerConfiguration  eureka.client.healthcheck.enabled 上报健康检查

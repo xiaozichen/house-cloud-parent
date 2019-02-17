@@ -1,0 +1,25 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/house_user?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;zeroDateTimeBehavior=convertToNull
+    username: root
+    password: root
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+       defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    prefer-ip-address: true
+  healthcheck:
+    enabled: true
+##lease-renewal-interval-in-seconds  心跳
+###lease-expiration-duration-in-seconds 续约时间，超过去除
+##EurekaHealthCheckHandlerConfiguration  eureka.client.healthcheck.enabled 上报健康检查
