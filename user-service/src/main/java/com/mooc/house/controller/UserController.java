@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -21,7 +22,11 @@ public class UserController {
     @Autowired
     private UserService userService;
     //-------------------查询---------------------
+    @GetMapping("/getUserName")
+    public RestResponse<String> getUserName(long id){
 
+        return RestResponse.success("user-test"+"---"+id);
+    }
     @RequestMapping("getById")
     public RestResponse<User> getUserById(Long id){
         User user = userService.getUserById(id);

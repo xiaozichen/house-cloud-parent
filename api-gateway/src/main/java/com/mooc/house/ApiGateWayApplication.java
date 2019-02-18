@@ -17,7 +17,7 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableEurekaClient
-@RibbonClient(name = "user-service",configuration = NewRuleConfig.class)
+//@RibbonClient(name = "user-service",configuration = NewRuleConfig.class)
 @Controller
 public class ApiGateWayApplication {
 

@@ -1,0 +1,3 @@
+lease-renewal-interval-in-seconds  心跳
+lease-expiration-duration-in-seconds 续约时间，超过去除
+EurekaHealthCheckHandlerConfiguration  eureka.client.healthcheck.enabled 上报健康检查

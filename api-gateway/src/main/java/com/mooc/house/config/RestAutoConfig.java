@@ -17,7 +17,6 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
 @Configuration
 public class RestAutoConfig {
 
-	public static class RestTemplateConfig {
 
 		@Bean
 		@LoadBalanced // LoadBalancerAutoConfiguration spring 对restTemplate bean进行定制，加入loadbalance拦截器进行ip:port的替换
@@ -52,6 +51,5 @@ public class RestAutoConfig {
 	          }
 
 	        }
-	}
 
 }

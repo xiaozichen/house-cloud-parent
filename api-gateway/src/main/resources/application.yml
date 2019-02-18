@@ -3,6 +3,28 @@ server:
 spring:
   application:
     name: api-gateway
+  mail:
+      host: mtp.163.com
+      username: spring_boot@163.com
+      password: abc123455
+      properties:
+         mail:
+           smtp:
+             auth: true
+             starttls:
+               enable: true
+               required: false
+  freemarker:
+    charset: utf-8
+    content-type: text/html;charset=UTF-8
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    suffix: .ftl
+    settings.datetime_format: yyyy-MM-dd HH:mm:ss
+    settings.default_encoding: UTF-8
+    settings.auto_import: common/common.ftl as common
+    allow-session-override: true
 eureka:
   client:
     register-with-eureka: true
@@ -19,6 +41,11 @@ logbook:
     level: info
   format:
     style: curl
-##lease-renewal-interval-in-seconds  心跳
-###lease-expiration-duration-in-seconds 续约时间，超过去除
-##EurekaHealthCheckHandlerConfiguration  eureka.client.healthcheck.enabled 上报健康检查
+domain.name: 127.0.0.1:8080
+file.prefix: http://127.0.0.1:80/
+file.path: D:/image/
+
+user.service.name: user-service
+house.service.name: house
+comment.service.name: comment
+

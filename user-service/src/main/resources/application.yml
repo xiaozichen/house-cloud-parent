@@ -22,6 +22,7 @@ spring:
            starttls:
              enable: true
              required: false
+
 eureka:
   client:
     register-with-eureka: true
@@ -37,6 +38,8 @@ eureka:
 
 file.path: D:/image/
 file.prefix: http://127.0.0.1:80/
+
+
 
 ##lease-renewal-interval-in-seconds  心跳
 ###lease-expiration-duration-in-seconds 续约时间，超过去除
