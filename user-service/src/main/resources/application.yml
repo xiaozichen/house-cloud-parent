@@ -8,6 +8,20 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/house_user?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;zeroDateTimeBehavior=convertToNull
     username: root
     password: root
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  mail:
+    host: mtp.163.com
+    username: spring_boot@163.com
+    password: abc123455
+    properties:
+       mail:
+         smtp:
+           auth: true
+           starttls:
+             enable: true
+             required: false
 eureka:
   client:
     register-with-eureka: true
@@ -20,6 +34,10 @@ eureka:
     prefer-ip-address: true
   healthcheck:
     enabled: true
+
+file.path: D:/image/
+file.prefix: http://127.0.0.1:80/
+
 ##lease-renewal-interval-in-seconds  心跳
 ###lease-expiration-duration-in-seconds 续约时间，超过去除
 ##EurekaHealthCheckHandlerConfiguration  eureka.client.healthcheck.enabled 上报健康检查
