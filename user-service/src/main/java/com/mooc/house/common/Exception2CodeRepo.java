@@ -1,22 +1,22 @@
 package com.mooc.house.common;
 
 import com.mooc.house.exception.IllegalParamsException;
+import com.mooc.house.exception.UserException;
 import com.mooc.house.exception.WithTypeException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.omg.CORBA.UserException;
 
 public class Exception2CodeRepo {
 	
 	private static final ImmutableMap<Object, RestCode> MAP = ImmutableMap.<Object, RestCode>builder()
 			.put(IllegalParamsException.Type.WRONG_PAGE_NUM,RestCode.WRONG_PAGE)
             .put(IllegalStateException.class,RestCode.UNKNOWN_ERROR)
-	        //.put(UserException.Type.USER_NOT_LOGIN,RestCode.TOKEN_INVALID)
-	        //.put(UserException.Type.USER_NOT_FOUND,RestCode.USER_NOT_EXIST)
-	        //.put(UserException.Type.USER_AUTH_FAIL,RestCode.USER_NOT_EXIST)
+	        .put(UserException.Type.USER_NOT_LOGIN,RestCode.TOKEN_INVALID)
+	        .put(UserException.Type.USER_NOT_FOUND,RestCode.USER_NOT_EXIST)
+	        .put(UserException.Type.USER_AUTH_FAIL,RestCode.USER_NOT_EXIST)
 	       .build();
 	
 	private static Object getType(Throwable throwable){

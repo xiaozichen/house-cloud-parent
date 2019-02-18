@@ -2,19 +2,24 @@ package com.mooc.house.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.mooc.house.exception.UserException;
 import com.mooc.house.mapper.UserMapper;
 import com.mooc.house.model.User;
 import com.mooc.house.utils.BeanHelper;
 import com.mooc.house.utils.HashUtils;
+import com.mooc.house.utils.JwtHelper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -100,5 +105,106 @@ public class UserService {
     updateUser.setEnable(1);
     userMapper.update(updateUser);
     return true;
+  }
+  /**
+   * 校验用户名密码、生成token并返回用户对象
+   * @param email
+   * @param passwd
+   * @return
+   */
+  public User auth(String email, String passwd) {
+    if (StringUtils.isBlank(email) || StringUtils.isBlank(passwd)) {
+      throw new UserException(UserException.Type.USER_AUTH_FAIL,"User Auth Fail");
+    }
+    User user = new User();
+    user.setEmail(email);
+    user.setPasswd(HashUtils.encryPassword(passwd));
+    user.setEnable(1);
+    List<User> list =  getUserByQuery(user);
+    if (!list.isEmpty()) {
+      User retUser = list.get(0);
+      onLogin(retUser);
+      return retUser;
+    }
+    throw new UserException(UserException.Type.USER_AUTH_FAIL,"User Auth Fail");
+  }
+  private void onLogin(User user) {
+    String token =  JwtHelper.genToken(ImmutableMap.of("email", user.getEmail(), "name", user.getName(),"ts", Instant.now().getEpochSecond()+""));
+    renewToken(token,user.getEmail());
+    user.setToken(token);
+  }
+
+  private String renewToken(String token, String email) {
+    redisTemplate.opsForValue().set(email, token);
+    redisTemplate.expire(email, 30, TimeUnit.MINUTES);
+    return token;
+  }
+
+  public User getLoginedUserByToken(String token) {
+    Map<String, String> map = null;
+    try {
+      map = JwtHelper.verifyToken(token);
+    } catch (Exception e) {
+      throw new UserException(UserException.Type.USER_NOT_LOGIN,"User not login");
+    }
+    String email =  map.get("email");
+    Long expired = redisTemplate.getExpire(email);
+    if (expired > 0L) {
+      renewToken(token, email);
+      User user = getUserByEmail(email);
+      user.setToken(token);
+      return user;
+    }
+    throw new UserException(UserException.Type.USER_NOT_LOGIN,"user not login");
+
+  }
+
+  private User getUserByEmail(String email) {
+    User user = new User();
+    user.setEmail(email);
+    List<User> list = getUserByQuery(user);
+    if (!list.isEmpty()) {
+      return list.get(0);
+    }
+    throw new UserException(UserException.Type.USER_NOT_FOUND,"User not found for " + email);
+  }
+
+  public void invalidate(String token) {
+    Map<String, String> map = JwtHelper.verifyToken(token);
+    redisTemplate.delete(map.get("email"));
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public User updateUser(User user) {
+    if (user.getEmail() == null) {
+      return null;
+    }
+    if (!Strings.isNullOrEmpty(user.getPasswd()) ) {
+      user.setPasswd(HashUtils.encryPassword(user.getPasswd()));
+    }
+    userMapper.update(user);
+    return userMapper.selectByEmail(user.getEmail());
+  }
+
+  public void resetNotify(String email,String url) {
+    String randomKey = "reset_" + RandomStringUtils.randomAlphabetic(10);
+    redisTemplate.opsForValue().set(randomKey, email);
+    redisTemplate.expire(randomKey, 1,TimeUnit.HOURS);
+    String content = url +"?key="+  randomKey;
+    mailService.sendSimpleMail("房产平台重置密码邮件", content, email);
+
+  }
+
+  public String getResetKeyEmail(String key) {
+    return  redisTemplate.opsForValue().get(key);
+  }
+
+  public User reset(String key, String password) {
+    String email = getResetKeyEmail(key);
+    User updateUser = new User();
+    updateUser.setEmail(email);
+    updateUser.setPasswd(HashUtils.encryPassword(password));
+    userMapper.update(updateUser);
+    return getUserByEmail(email);
   }
 }

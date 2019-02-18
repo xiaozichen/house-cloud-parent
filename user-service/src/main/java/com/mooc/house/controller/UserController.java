@@ -48,4 +48,52 @@ public class UserController {
         return RestResponse.success();
     }
 
+    //------------------------登录/鉴权--------------------------
+
+    @RequestMapping("auth")
+    public RestResponse<User> auth(@RequestBody User user){
+        User finalUser = userService.auth(user.getEmail(),user.getPasswd());
+        return RestResponse.success(finalUser);
+    }
+
+    @RequestMapping("get")
+    public RestResponse<User> getUser(String token){
+        User finalUser = userService.getLoginedUserByToken(token);
+        return RestResponse.success(finalUser);
+    }
+
+    /**
+     * 登出
+     * @param token
+     * @return
+     */
+    @RequestMapping("logout")
+    public RestResponse<Object> logout(String token){
+        userService.invalidate(token);
+        return RestResponse.success();
+    }
+    @RequestMapping("update")
+    public RestResponse<User> update(@RequestBody User user){
+        User updateUser = userService.updateUser(user);
+        return RestResponse.success(updateUser);
+    }
+
+    @RequestMapping("reset")
+    public RestResponse<User> reset(String key ,String password){
+        User updateUser = userService.reset(key,password);
+        return RestResponse.success(updateUser);
+    }
+
+    @RequestMapping("getKeyEmail")
+    public RestResponse<String> getKeyEmail(String key){
+        String  email = userService.getResetKeyEmail(key);
+        return RestResponse.success(email);
+    }
+
+    @RequestMapping("resetNotify")
+    public RestResponse<User> resetNotify(String email,String url){
+        userService.resetNotify(email,url);
+        return RestResponse.success();
+    }
+
 }
