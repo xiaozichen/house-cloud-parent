@@ -13,6 +13,7 @@ import com.mooc.house.common.UserContext;
 import com.mooc.house.model.Agency;
 import com.mooc.house.model.User;
 import com.mooc.house.service.AccountService;
+import com.mooc.house.service.AgencyService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,8 +34,8 @@ public class UserController {
   @Autowired
   private AccountService accountService;
   
- // @Autowired
-  //private AgencyService agencyService;
+  @Autowired
+  private AgencyService agencyService;
   
   
 //----------------------------注册流程-------------------------------------------
@@ -147,7 +148,7 @@ public class UserController {
   //----------------------------个人信息修改--------------------------------------
   @RequestMapping(value="accounts/profile",method={RequestMethod.POST,RequestMethod.GET})
   public String profile(ModelMap  model){
-    List<Agency> list = null ; //agencyService.getAllAgency();
+    List<Agency> list = agencyService.getAllAgency();
     model.addAttribute("agencyList", list);
     return "/user/accounts/profile";
   }
