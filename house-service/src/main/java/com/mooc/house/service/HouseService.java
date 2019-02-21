@@ -141,7 +141,7 @@ public class HouseService {
 
 
   public Pair<List<House>, Long> queryHouse(House query, LimitOffset build) {
-    List<House> houses = Lists.newArrayList();
+    List<House> houses;
     House houseQuery = query;
     if (StringUtils.isNoneBlank(query.getName())) {
        Community community = new Community();
