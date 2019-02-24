@@ -48,4 +48,13 @@ file.path: D:/image/
 user.service.name: user-service
 house.service.name: house
 comment.service.name: comment
+management:
+  port: 8023
 
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 2000
+hystrix.threadpool.default.coreSize: 1
+hystrix.threadpool.default.maxQueueSize: 1
+hystrix.threadpool.default.maximumSize: 1
+
+hystrix.command.default.circuitBreaker.errorThresholdPercentage: 1
+hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds: 100000
