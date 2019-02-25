@@ -3,10 +3,12 @@ package com.mooc.house.controller;
 import java.util.List;
 
 import com.mooc.house.common.*;
+import com.mooc.house.model.Comment;
 import com.mooc.house.model.House;
 import com.mooc.house.model.User;
 import com.mooc.house.model.UserMsg;
 import com.mooc.house.service.AgencyService;
+import com.mooc.house.service.CommentService;
 import com.mooc.house.service.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,8 +28,8 @@ public class HouseController {
   @Autowired
   private AgencyService agencyService;
   
- /* @Autowired
-  private CommentService commentService;*/
+  @Autowired
+  private CommentService commentService;
   
   
 
@@ -44,7 +46,7 @@ public class HouseController {
   @RequestMapping(value="house/detail",method={RequestMethod.POST,RequestMethod.GET})
   public String houseDetail(long id,ModelMap modelMap){
     House house = houseService.queryOneHouse(id);
-   // List<Comment> comments = commentService.getHouseComments(id);
+    List<Comment> comments = commentService.getHouseComments(id);
     List<House> rcHouses =  houseService.getHotHouse(CommonConstants.RECOM_SIZE);
     if (house.getUserId() != null) {
       if (!Objects.equal(0L, house.getUserId())) {
@@ -53,7 +55,7 @@ public class HouseController {
     }
     modelMap.put("house", house);
     modelMap.put("recomHouses", rcHouses);
-    //modelMap.put("commentList", comments);
+    modelMap.put("commentList", comments);
     return "/house/detail";
   }
   
